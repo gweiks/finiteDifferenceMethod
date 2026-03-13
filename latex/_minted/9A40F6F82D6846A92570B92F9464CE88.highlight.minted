@@ -1,0 +1,54 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{heat\PYGZus{}fdm}\PYG{p}{(}\PYG{n}{initial}\PYG{p}{,} \PYG{n}{left\PYGZus{}bc}\PYG{p}{,} \PYG{n}{right\PYGZus{}bc}\PYG{p}{,} \PYG{n}{L}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{T}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{c}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{:}
+\PYG{+w}{    }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+\PYG{l+s+sd}{    Finite difference solver for the heat equation.}
+
+\PYG{l+s+sd}{    initial : list}
+\PYG{l+s+sd}{        values of u(x\PYGZus{}i,0)}
+
+\PYG{l+s+sd}{    left\PYGZus{}bc : list}
+\PYG{l+s+sd}{        boundary values at x=0 for each time step}
+
+\PYG{l+s+sd}{    right\PYGZus{}bc : list}
+\PYG{l+s+sd}{        boundary values at x=L for each time step}
+
+\PYG{l+s+sd}{    L = length of rod}
+
+\PYG{l+s+sd}{    T = time to solve for}
+
+\PYG{l+s+sd}{    c = diffusion constant}
+\PYG{l+s+sd}{    \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+
+    \PYG{n}{n} \PYG{o}{=} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{initial}\PYG{p}{)} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{1}
+    \PYG{n}{m} \PYG{o}{=} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{left\PYGZus{}bc}\PYG{p}{)} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{1}
+
+    \PYG{n}{h} \PYG{o}{=} \PYG{n}{L} \PYG{o}{/} \PYG{n}{n}
+    \PYG{n}{k} \PYG{o}{=} \PYG{n}{T} \PYG{o}{/} \PYG{n}{m}
+
+    \PYG{n}{s} \PYG{o}{=} \PYG{n}{c}\PYG{o}{*}\PYG{o}{*}\PYG{l+m+mi}{2} \PYG{o}{*} \PYG{n}{k} \PYG{o}{/} \PYG{n}{h}\PYG{o}{*}\PYG{o}{*}\PYG{l+m+mi}{2}
+
+    \PYG{c+c1}{\PYGZsh{} solution array}
+    \PYG{n}{u} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{(}\PYG{p}{(}\PYG{n}{m}\PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{n}\PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{)}
+
+    \PYG{c+c1}{\PYGZsh{} initial condition}
+    \PYG{n}{u}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{p}{:}\PYG{p}{]} \PYG{o}{=} \PYG{n}{initial}
+
+    \PYG{c+c1}{\PYGZsh{} boundary conditions}
+    \PYG{k}{for} \PYG{n}{j} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{m}\PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{:}
+        \PYG{n}{u}\PYG{p}{[}\PYG{n}{j}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{]} \PYG{o}{=} \PYG{n}{left\PYGZus{}bc}\PYG{p}{[}\PYG{n}{j}\PYG{p}{]}
+        \PYG{n}{u}\PYG{p}{[}\PYG{n}{j}\PYG{p}{,} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{=} \PYG{n}{right\PYGZus{}bc}\PYG{p}{[}\PYG{n}{j}\PYG{p}{]}
+
+    \PYG{c+c1}{\PYGZsh{} finite difference iteration}
+    \PYG{k}{for} \PYG{n}{j} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{m}\PYG{p}{)}\PYG{p}{:}
+        \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{n}\PYG{p}{)}\PYG{p}{:}
+            \PYG{n}{u}\PYG{p}{[}\PYG{n}{j}\PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{n}{u}\PYG{p}{[}\PYG{n}{j}\PYG{p}{,} \PYG{n}{i}\PYG{p}{]} \PYG{o}{+} \PYG{n}{s} \PYG{o}{*} \PYG{p}{(}\PYG{n}{u}\PYG{p}{[}\PYG{n}{j}\PYG{p}{,} \PYG{n}{i}\PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{2}\PYG{o}{*}\PYG{n}{u}\PYG{p}{[}\PYG{n}{j}\PYG{p}{,} \PYG{n}{i}\PYG{p}{]} \PYG{o}{+} \PYG{n}{u}\PYG{p}{[}\PYG{n}{j}\PYG{p}{,} \PYG{n}{i}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{)}
+
+    \PYG{n}{x} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{linspace}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{L}\PYG{p}{,} \PYG{n}{n}\PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{)}
+    \PYG{n}{t} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{linspace}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{T}\PYG{p}{,} \PYG{n}{m}\PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{)}
+    \PYG{n}{grid} \PYG{o}{=} \PYG{n}{pd}\PYG{o}{.}\PYG{n}{DataFrame}\PYG{p}{(}\PYG{n}{u}\PYG{p}{,} \PYG{n}{columns}\PYG{o}{=}\PYG{p}{[}\PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{x}\PYG{l+s+si}{\PYGZob{}}\PYG{n}{i}\PYG{l+s+si}{:}\PYG{l+s+s2}{.2f}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}} \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n}{x}\PYG{p}{]}\PYG{p}{)}
+    \PYG{n}{grid} \PYG{o}{=} \PYG{n}{grid}\PYG{o}{.}\PYG{n}{round}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}
+    \PYG{n}{grid}\PYG{o}{.}\PYG{n}{insert}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+s2}{t}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{n}{t}\PYG{p}{)}
+
+
+    \PYG{k}{return} \PYG{n}{grid}
+\end{MintedVerbatim}
